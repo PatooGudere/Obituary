@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit an Obituary</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 600px;
+            background: white;
+            padding: 20px;
+            margin: auto;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background: #28a745;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background: #218838;
+        }
+        .social-buttons a {
+            display: inline-block;
+            margin: 5px;
+            padding: 10px;
+            text-decoration: none;
+            color: white;
+            border-radius: 5px;
+        }
+        .facebook { background: #3b5998; }
+        .twitter { background: #1da1f2; }
+        .whatsapp { background: #25d366; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Submit an Obituary</h2>
+    <form action="submit_obituary.php" method="POST" onsubmit="return validateForm()">
+        <label for="name">Full Name:</label>
+        <input type="text" id="name" name="name" required oninput="generateSlug()">
+
+        <label for="slug">Slug (Auto-generated):</label>
+        <input type="text" id="slug" name="slug" readonly>
+
+        <label for="dob">Date of Birth:</label>
+        <input type="date" id="dob" name="date_of_birth" required>
+
+        <label for="dod">Date of Death:</label>
+        <input type="date" id="dod" name="date_of_death" required>
+
+        <label for="content">Obituary Content:</label>
+        <textarea id="content" name="content" rows="4" required></textarea>
+
+        <label for="author">Submitted By:</label>
+        <input type="text" id="author" name="author" required>
+
+        <button type="submit">Submit Obituary</button>
+    </form>
+
+    <!-- Social Media -->
+    <div class="social-buttons">
+        <h3>Share This Obituary</h3>
+        <a href="#" class="facebook" id="facebook-share">Share on Facebook</a>
+        <a href="#" class="twitter" id="twitter-share">Share on Twitter</a>
+        <a href="#" class="whatsapp" id="whatsapp-share">Share on WhatsApp</a>
+    </div>
+</div>
+
+<script>
+    function generateSlug() {
+        let name = document.getElementById("name").value.trim().toLowerCase();
+        let slug = name.replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+        document.getElementById("slug").value = slug;
+    }
+    
+    function validateForm() {
+        let name = document.getElementById("name").value.trim();
+        let dob = document.getElementById("dob").value;
+        let dod = document.getElementById("dod").value;
+        let content = document.getElementById("content").value.trim();
+        let author = document.getElementById("author").value.trim();
+
+        if (name === "" || content === "" || author === "") {
+            alert("All fields must be filled out!");
+            return false;
+        }
+
+        if (new Date(dod) < new Date(dob)) {
+            alert("Date of death cannot be before date of birth.");
+            return false;
+        }
+
+        return true;
+    }
+    
+    document.addEventListener("DOMContentLoaded", function () {
+        let url = window.location.href;
+        document.getElementById("facebook-share").href = "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(url);
+        document.getElementById("twitter-share").href = "https://twitter.com/intent/tweet?url=" + encodeURIComponent(url);
+        document.getElementById("whatsapp-share").href = "https://wa.me/?text=" + encodeURIComponent(url);
+    });
+</script>
+</body>
+</html>
